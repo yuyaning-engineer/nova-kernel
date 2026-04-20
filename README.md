@@ -1,11 +1,13 @@
 # Nova Kernel
 
 > **The Constitutional AI Operating System.**
-> One memory, one skill library, one agent registry — shared across **Claude Code · Codex · Gemini · Cursor · Antigravity**. Self-evolving, self-maintaining, self-explaining.
+> Orchestrate **Claude · GPT · Gemini · Codex** as one team — shared memory, shared skills, shared agents.
+> Routes through your **existing IDE subscriptions** (Antigravity, ChatGPT) so multi-model collaboration costs **$0 in API spend**.
 
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
 [![Node](https://img.shields.io/badge/Node-%E2%89%A520-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
 [![MCP](https://img.shields.io/badge/MCP-compatible-7c3aed)](https://modelcontextprotocol.io/)
+[![Cost](https://img.shields.io/badge/marginal_LLM_cost-%240%2Fmo-22c55e)]()
 [![Status](https://img.shields.io/badge/status-alpha-orange)]()
 
 ---
@@ -20,6 +22,40 @@ Today's AI tools — Claude Code, Codex CLI, Cursor, Continue, Antigravity, raw 
 - Every assistant rebuilds knowledge nobody chose to lose
 
 **Nova Kernel** is the missing layer: a **single source of truth** for memory + skills + agents, with automatic projection to all the AI tools you use. It's the OS your AIs share.
+
+---
+
+## 💰 The unfair part — multi-model collaboration at $0 marginal cost
+
+Most "agent frameworks" assume you'll pay per-token to a single API. Nova flips that: it **routes every task through whichever AI tool you already have a subscription with**, and treats them as a coordinated team.
+
+| Worker | What it's good at | How Nova reaches it | Your cost |
+|--------|------------------|---------------------|-----------|
+| **Claude Sonnet 4.6** | Code reasoning, structured extraction | `antigravity-claude-sonnet-4-6` via [ag-bridge](https://github.com/marcodiniz/ag-local-bridge) `:11435` | $0 (Antigravity IDE subscription) |
+| **Claude Opus 4.6 Thinking** | Deep planning, multi-step decisions | `antigravity-claude-opus-4-6-thinking` | $0 (Antigravity) |
+| **Gemini 3.1 Pro High** | Long-context analysis, multimodal | `antigravity-gemini-3.1-pro-high` (or direct Gemini API free tier) | $0 (Antigravity / free tier) |
+| **Gemini 3 Flash** | Fast classification, tagging | `gemini-flash` direct | $0 (free tier) |
+| **GPT-5 / Codex** | Code review, sandboxed execution | `codex` CLI (npm `@openai/codex`) | $0 (ChatGPT subscription) |
+| **Local bge-m3 / Ollama** | Embeddings, vector search | `http://127.0.0.1:11434` | $0 (local) |
+
+**Driver Claude orchestrates the team** — same conversation, but each task automatically routed to the cheapest model good enough for the job:
+
+```
+You: "fix the auth bug, then verify with tests"
+                       │
+                       ▼
+Driver Claude (you're talking to)
+   ├─ writes the patch        →  Sonnet 4.6 (via ag-bridge, free)
+   ├─ deep-thinks edge cases  →  Opus 4.6 Thinking (via ag-bridge, free)
+   ├─ runs npm test           →  Codex CLI (via ChatGPT sub, free)
+   ├─ summarizes outcome      →  Gemini Flash (free tier)
+   └─ writes lesson learned   →  memory (local, free)
+                       │
+                       ▼
+              Net cost: $0
+```
+
+When you don't have a subscription for a tier, Nova **gracefully falls back** to the next best option — set `ANTHROPIC_API_KEY` / `OPENAI_API_KEY` and Nova uses them as a last resort.
 
 ---
 
