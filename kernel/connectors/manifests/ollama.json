@@ -1,0 +1,1 @@
+{"id":"ollama","type":"http","displayName":"Ollama Local LLM","url":"http://127.0.0.1:11434/api/tags","expectStatus":200,"timeoutMs":5000,"healthIntervalMs":600000,"criticality":"low"}

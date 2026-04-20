@@ -1,0 +1,40 @@
+{
+  "version": "2.0",
+  "_doc": "按**任务本质**分 Tier（不是便宜/贵）：T1=快分类 · T2=结构化 · T3=深度判断 · T4=议会决议。换模型只改这一个文件。Claude 4.7 / Gemini 4 发布时只需升级 tier 绑定。",
+  "tiers": {
+    "T1": {
+      "description": "机械分类/去重/路由。低认知负担，追求低延迟",
+      "default_model": "antigravity-gemini-3-flash",
+      "fallback": ["gemini-flash", "antigravity-gemini-3.1-flash-lite-preview"],
+      "use_cases": ["dedupe", "archive", "url_classify", "intent_route"]
+    },
+    "T2": {
+      "description": "结构化抽取/摘要/标签推断。需要 JSON 稳定性",
+      "default_model": "antigravity-claude-sonnet-4-6",
+      "fallback": ["antigravity-gemini-3.1-pro-high", "gemini-pro"],
+      "use_cases": ["entity_extract", "tag_inference", "intel_refine", "content_distill"]
+    },
+    "T3": {
+      "description": "深度判断/跨条目推理/合并提议。需要 Chain-of-Thought",
+      "default_model": "antigravity-claude-opus-4-6-thinking",
+      "fallback": ["antigravity-gemini-3.1-pro-high", "antigravity-claude-sonnet-4-6"],
+      "use_cases": ["librarian_triage", "librarian_audit", "curator_review", "briefing_narrative", "meta_memory_extract"]
+    },
+    "T4": {
+      "description": "架构演化/L3 禁区改动/多方投票决议",
+      "default_model": "antigravity-claude-opus-4-6-thinking",
+      "fallback": ["antigravity-gemini-3.1-pro-high"],
+      "route_to": "council",
+      "use_cases": ["taxonomy_evolve", "schema_change", "L3_proposal", "constitutional_change"]
+    }
+  },
+  "embedding": {
+    "current": "qwen3-embedding-8b",
+    "endpoint": "http://127.0.0.1:8899",
+    "alternatives": ["gemini-embedding-001", "nomic-embed-text"]
+  },
+  "rerank": {
+    "current": "qwen3-reranker-4b",
+    "endpoint": "http://127.0.0.1:8899"
+  }
+}

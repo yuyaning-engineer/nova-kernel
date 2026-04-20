@@ -1,0 +1,49 @@
+{
+  "name": "nova-kernel",
+  "version": "0.1.0",
+  "description": "The Constitutional AI Operating System — one memory, one skill library, one agent registry, shared across Claude / Codex / Gemini / Cursor / Antigravity.",
+  "type": "module",
+  "license": "Apache-2.0",
+  "main": "kernel/server.js",
+  "bin": {
+    "nova-mcp": "./bin/nova-mcp.mjs"
+  },
+  "scripts": {
+    "start": "node --env-file=.env start-ecosystem.mjs --kernel",
+    "mcp": "node bin/nova-mcp.mjs",
+    "test": "node --check kernel/server.js && echo syntax OK",
+    "lint": "node --check kernel/**/*.mjs"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "keywords": [
+    "ai",
+    "agent",
+    "memory",
+    "skills",
+    "claude",
+    "gemini",
+    "codex",
+    "mcp",
+    "model-context-protocol",
+    "cross-model",
+    "self-evolving",
+    "constitutional-ai"
+  ],
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.88.0",
+    "@google/genai": "^1.49.0",
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "better-sqlite3": "^12.8.0",
+    "openai": "^6.34.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yuyaning-engineer/nova-kernel.git"
+  },
+  "homepage": "https://github.com/yuyaning-engineer/nova-kernel#readme",
+  "bugs": {
+    "url": "https://github.com/yuyaning-engineer/nova-kernel/issues"
+  }
+}

@@ -1,0 +1,1 @@
+{"id":"claude-code-cli","type":"exec","displayName":"Claude Code CLI","envOverride":"CLAUDE_BIN","execNames":["claude.exe"],"winSearchPaths":["C:/Users/tf/AppData/Roaming/Claude/claude-code/2.1.111","C:/Users/tf/AppData/Local/AnthropicClaude"],"versionArgs":["--version"],"versionRegex":"(\\d+\\.\\d+\\.\\d+)","minVersion":"2.0.0","healthIntervalMs":600000,"criticality":"medium"}

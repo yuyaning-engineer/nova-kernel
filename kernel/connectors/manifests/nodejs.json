@@ -1,0 +1,1 @@
+{"id":"nodejs","type":"exec","displayName":"Node.js","envOverride":"NODE_BIN","execNames":["node.exe","node"],"winSearchPaths":["C:/Program Files/nodejs"],"versionArgs":["--version"],"versionRegex":"v(\\d+\\.\\d+\\.\\d+)","minVersion":"20.0.0","healthIntervalMs":600000,"criticality":"high"}

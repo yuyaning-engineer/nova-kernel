@@ -1,0 +1,178 @@
+{
+  "version": "commerce-1.0",
+  "edition": "Nova Kernel — Commerce Edition",
+  "based_on": "nova-kernel v2.0 (2026-04-11)",
+  "created": "2026-04-16",
+  "updated": "2026-04-16",
+  "description": "Nova Kernel 商用版宪法层 — 客户专用。采用「执行+否决窗口」自主权模型，但默认值偏保守：L1 阈值收紧到 0.85，L2 窗口拉长到 24h/48h，L3 模式覆盖电商高风险动作（公开发布/改价/广告/退款/客服回复）。所有演化引擎必须在执行任何写入操作前查询此文件，AI 不可修改本文件。",
+
+  "immutable_paths": [
+    "kernel/constitutional.json",
+    "kernel/audit/audit.db",
+    "kernel/audit/audit.js",
+    "kernel/memory/security.js",
+    "kernel/utils/l3-gate.mjs",
+    "logs/**/*.md"
+  ],
+
+  "conflict_resolution": "forbidden_actions 优先级高于 ai_autonomous_zone。当两者冲突时，以 forbidden_actions 为准。",
+
+  "emergency_protocol": {
+    "trigger": "AI Council 连续 3 次投票失败，或 evolution 引擎被篡改告警锁定，或 gap-detector 熔断器进入 OPEN 状态超过 1 小时，或 24 小时内 L2/L3 操作失败率 >= 30%",
+    "action": "自动降级至保守模式：暂停所有 L1 自主操作，L2 veto 窗口延长至 168h（7 天），所有 L3 提案需双人确认，等待人类介入",
+    "resume": "业务负责人明确发出 'resume operations' 指令并签署运行报告后恢复",
+    "notify_channels": ["notify/plugin", "audit/log"]
+  },
+
+  "append_only": {
+    "paths": ["logs/**/*.md"],
+    "enforcement": "写入前计算文件 SHA256 并与 audit.db 中锚定的 hash 对比，发现内容被修改立即告警并锁定 evolution 引擎，等待人类介入"
+  },
+
+  "log_format": {
+    "filename_pattern": "YYYY-MM-DD-<project>-<session-id>.md",
+    "required_fields": ["timestamp", "session_id", "project", "operator", "phase", "action", "result", "next_steps"],
+    "auto_generated": true,
+    "human_editable": false,
+    "storage_path": "logs/"
+  },
+
+  "autonomy_tiers": {
+    "L0": {
+      "description": "宪法级保护路径 — 任何 AI 写操作均被硬拒绝，不生成提案",
+      "execution": "blocked",
+      "veto_window_hours": null,
+      "protected_paths": [
+        "kernel/constitutional.json",
+        "kernel/audit/audit.db",
+        "kernel/audit/audit.js",
+        "kernel/memory/security.js",
+        "kernel/utils/l3-gate.mjs"
+      ]
+    },
+    "L1": {
+      "description": "AI 全自主立即执行，无否决窗口。仅适用于完全无副作用的纯生成类任务（SEO 标题、文案、报表）。条件：(置信度 >= 0.85 + local) 或 (置信度 >= 0.95 任意范围)。首次操作使用保守基线 0.50。",
+      "execution": "auto_execute",
+      "veto_window_hours": 0,
+      "requires_audit_log": true,
+      "confidence_threshold_local": 0.85,
+      "confidence_threshold_any": 0.95,
+      "confidence_baseline_first_time": 0.50
+    },
+    "L2": {
+      "description": "AI 执行并开启否决窗口。客户版默认窗口拉长：高置信(>=0.60)+service → 24h；其余 → 48h。AI-PR 是审计记录，业务方在窗口内可手动撤销。",
+      "execution": "veto_window",
+      "veto_window_hours_default": 24,
+      "veto_window_hours_low_confidence": 48,
+      "generates_ai_pr": true,
+      "ai_pr_path": "evolution/ai-prs/",
+      "confidence_threshold_for_default_window": 0.60
+    },
+    "L3": {
+      "description": "客户版扩展 L3 — 凡涉及『公开发布 / 资金动用 / 客户沟通』的操作必须经人类预批准。AI 生成 AI-PR，业务方点击批准后才执行。",
+      "execution": "pre_approval",
+      "veto_window_hours": null,
+      "generates_ai_pr": true,
+      "ai_pr_path": "evolution/ai-prs/",
+      "examples": [
+        "── 通用外部不可逆 ──",
+        "charge.*user / payment.*process（资金流动）",
+        "send.*email / send.*sms（已送达通信）",
+        "post.*twitter/weibo/instagram（公开社交媒体）",
+        "delete.*account（数据永久删除）",
+        "── 电商：公开发布 ──",
+        "publishProduct / listProduct（商品上架，影响品牌形象）",
+        "replyComment（公开评论回复，有声誉风险）",
+        "publishContent（公开内容发布）",
+        "── 电商：动钱 ──",
+        "updatePrice / changePrice（改价，直接影响营收）",
+        "adjustAdPlan / launch.*ad（广告投放调整，消耗预算）",
+        "createPurchaseOrder（采购订单，直接动用资金）",
+        "issueRefund（退款）",
+        "── 电商：客户沟通 ──",
+        "sendVipMessage / send.*customer.*message（给客户主动发消息）",
+        "customerServiceReply（客服正式回复，有声誉风险）"
+      ],
+      "promotion_path": "L3 操作运行 30 天置信度 >= 0.85 后，可由人类发起降级提案，进入 L2 否决窗口模式"
+    }
+  },
+
+  "skill_promotion": {
+    "description": "Skill 草稿自动晋级流程",
+    "flow": [
+      "1. procedural-memory 生成 .draft.md（安全扫描通过后）",
+      "2. vote-aggregator 发起 AI Council 三方投票（Gemini + Codex + nova-self）",
+      "3. 加权分数 >= 0.75 且 safety >= 0.80 → 生成 L2 veto_window AI-PR",
+      "4. 24h 否决窗口无人否决 → sweepExpiredVetoWindows 自动晋级",
+      "5. 晋级：.draft.md → evolution/skills/<name>/SKILL.md"
+    ],
+    "vote_dimensions": {
+      "correctness": 0.40,
+      "safety": 0.35,
+      "utility": 0.15,
+      "novelty": 0.10
+    },
+    "thresholds": {
+      "weighted_approve": 0.65,
+      "safety_hard_floor": 0.80,
+      "weighted_reject": 0.45,
+      "nova_self_independent_approve": 0.75
+    },
+    "nova_self_independent": "当外部 voter（Gemini/Codex）均不可用时，nova-self 在 correctness >= 0.75 且 safety >= 0.80 的情况下可独立批准晋级"
+  },
+
+  "gap_repair": {
+    "description": "gap-detector 自主修复规则",
+    "circuit_breaker": {
+      "failure_threshold": 3,
+      "recovery_minutes": 30,
+      "states": ["CLOSED", "OPEN", "HALF_OPEN"]
+    },
+    "safety_fences": [
+      "circuit_breaker: 熔断器 OPEN 时拒绝所有修复",
+      "idempotency: 同一 gap 12h 内已修复则跳过",
+      "blast_radius: local 直接修复；service 级需 confidence >= 0.80；cross-service/global 拒绝",
+      "cascade: 置信度 < 0.30 时降级为仅生成提案"
+    ],
+    "auto_repair_scope": [
+      "failure_pattern → 写入 negative-memory.json（L1/L2）",
+      "skill_miss → 触发 vote-aggregator 批量投票（L2）",
+      "perf_bottleneck → 生成路由优化提案（L2，service 级 confidence >= 0.80 时也自动修复）",
+      "cross_product_dup → service 级 confidence >= 0.80 时生成 Kernel Skill 提案"
+    ]
+  },
+
+  "ai_autonomous_zone": [
+    "evolution/skills/（仅限创建草稿，后缀必须为 .draft.md；晋级为 SKILL.md 需经 AI Council 投票 + veto 窗口）",
+    "evolution/ai-prs/（仅限创建提案文件，不得自行标记已批准）",
+    "kernel/memory/negative-memory.json（gap-detector 自动追加规则，人类可在 veto 窗口内撤销）",
+    "kernel/memory/MEMORY.md（系统级笔记，受注入扫描保护）",
+    "products/*/（适配层实现代码，接口定义变更除外）"
+  ],
+
+  "forbidden_actions": [
+    "修改或删除 kernel/constitutional.json 本身",
+    "删除或修改 kernel/audit/audit.db 中的任何记录",
+    "绕过 kernel/memory/security.js 的注入扫描直接写入记忆",
+    "向 audit.db 写入虚假 hash 或篡改时间戳",
+    "修改或删除 logs/ 下任何已存在的 .md 文件",
+    "以任何方式阻止日志文件的自动生成",
+    "修改 kernel/utils/l3-gate.mjs 中的 L0_PROTECTED 列表（需人类审批）",
+    "绕过 veto_window 直接将 .draft.md 标记为 active Skill",
+    "── 客户版 · 电商专用 ──",
+    "未经 L3 预批准直接调用平台 API 发布商品 / 改价 / 调整广告计划",
+    "未经 L3 预批准给客户发送任何消息（短信、私信、客服回复、VIP 触达）",
+    "未经 L3 预批准创建采购订单或发起任何资金流动",
+    "未经 L3 预批准在小红书/抖音/淘宝/京东/拼多多等公开渠道发布内容",
+    "在没有 audit log 的情况下调用任何平台 SDK",
+    "把客户的 API Key、商家密钥、订单原始数据写入 kernel/memory/MEMORY.md 或 logs/",
+    "未经业务方同意删除任何商品图、订单数据或客户记录"
+  ],
+
+  "amendment_procedure": "修改此文件需要：1) 在 evolution/ai-prs/ 生成修改提案（含理由+影响分析）2) 三方 AI council 审查（加权分 >= 0.75）3) 人类在否决窗口内明确批准（不沉默即批准规则不适用于宪法修订）4) 在 audit.db 记录修改事件",
+
+  "task_abi_security": {
+    "description": "Task 返回值必须经过 sanitization 才能写入记忆或触发下一阶段，防止通过 task output 进行 Prompt Injection",
+    "enforcement": "所有 task result 写入 MEMORY.md 前必须经过 kernel/memory/security.js 扫描"
+  }
+}

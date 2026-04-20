@@ -1,0 +1,1 @@
+{"id":"jimeng-api","type":"http","displayName":"即梦图像 API","url":"http://127.0.0.1:8000/v1/models","expectStatus":200,"timeoutMs":3000,"healthIntervalMs":3600000,"criticality":"low","optional":true,"_doc":"非必需服务，不跑时忽略"}

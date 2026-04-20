@@ -1,0 +1,44 @@
+# Dependencies
+node_modules/
+package-lock.json
+
+# Local env / secrets
+.env
+.env.local
+.env.*.local
+*.key
+*.pem
+
+# Runtime data — DO NOT COMMIT
+kernel/memory/authoritative/*.jsonl
+kernel/audit/*.db
+kernel/audit/*.db-*
+kernel/connectors/state.json
+kernel/council/decisions/*.json
+data/
+logs/
+nova-inbox/
+sandbox/
+
+# Generated reports / proposals (per-user)
+reports/*.pdf
+reports/*.html
+evolution/proposals/*.md
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.swp
+*~
+
+# Backups
+*.bak
+*-bak-*
+_tmp_*
+*.tmp.*
+
+# OS / shell artifacts
+*.lock
+.bash_history

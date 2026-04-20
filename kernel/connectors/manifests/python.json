@@ -1,0 +1,1 @@
+{"id":"python","type":"exec","displayName":"Python","envOverride":"JST_PYTHON_BIN","execNames":["python.exe","python"],"winSearchPaths":["D:/AI/Miniconda3","C:/Users/tf/AppData/Local/Programs/Python/Python312"],"versionArgs":["--version"],"versionRegex":"Python (\\d+\\.\\d+\\.\\d+)","minVersion":"3.10.0","healthIntervalMs":600000,"criticality":"high"}

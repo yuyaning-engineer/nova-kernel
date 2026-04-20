@@ -1,0 +1,1 @@
+{"id":"ag-bridge","type":"http","displayName":"Antigravity Local Bridge","url":"http://127.0.0.1:11435/v1/models","expectStatus":200,"timeoutMs":15000,"healthIntervalMs":600000,"criticality":"medium"}

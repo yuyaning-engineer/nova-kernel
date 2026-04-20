@@ -1,0 +1,22 @@
+{
+  "last_mined_at": "2026-04-20T02:02:10.758Z",
+  "proposals_written": [
+    "reverse-sync-via-inbox",
+    "connector-antigravity-ide-health",
+    "connector-claude-code-cli-recover",
+    "connector-nodejs-recover",
+    "connector-python-recovery",
+    "ag-bridge-health-recovery",
+    "connector-status-triage",
+    "recover-antigravity-ide-connector",
+    "diagnose-claude-code-cli-eperm",
+    "codex-connector-recovery",
+    "connector-nodejs-recovery",
+    "connector-python-recover",
+    "ag-bridge-health-check",
+    "antigravity-provider-fallback-chain",
+    "gemini-cascade-fallback",
+    "connector-status-triage",
+    "provider-fallback-chain"
+  ]
+}

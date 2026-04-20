@@ -1,0 +1,39 @@
+{
+  "$schema": "agent-registry-v1",
+  "_doc": "Agent registry — all callable agents in Nova. Any AI invokes via nova_agent_invoke <name> <args_json>. interpreter: internal (JS module) / python / node / custom binary. calling_convention: method_payload | raw_args.",
+  "_extending": "Add your own agent under `agents` — see _example_python_agent for the schema. Drop the `_` prefix to enable.",
+  "version": "1.0",
+  "agents": {
+    "memory-hygiene": {
+      "displayName": "Memory Hygiene Agent",
+      "interpreter": "internal",
+      "module_path": "kernel/memory/hygiene.mjs",
+      "export_method": "applyHygiene",
+      "calling_convention": "method_payload",
+      "args_schema": {
+        "method": "applyHygiene | scanHygiene",
+        "payload": "{ types?: string[], useLlm?: boolean }"
+      },
+      "timeout_ms": 180000,
+      "module": "nova-kernel",
+      "risk_level": "L1",
+      "description": "Scan + repair memory library: delete test residue / heuristic + LLM module backfill / report anomalies. 12h cron auto dry-run."
+    },
+    "_example_python_agent": {
+      "_comment": "Example: registering a Python agent. Strip `_` prefix to enable.",
+      "displayName": "Example Python Agent",
+      "cwd": "agents/example",
+      "interpreter": "python",
+      "entry": "main.py",
+      "calling_convention": "method_payload",
+      "args_schema": {
+        "method": "string (whitelisted methods defined in main.py)",
+        "payload": "object"
+      },
+      "timeout_ms": 60000,
+      "module": "your-domain",
+      "risk_level": "L1",
+      "description": "Your business agent description"
+    }
+  }
+}

@@ -1,0 +1,1 @@
+{"id":"antigravity-ide","type":"exec","displayName":"Antigravity IDE","envOverride":"ANTIGRAVITY_BIN","execNames":["antigravity.cmd"],"winSearchPaths":["D:/Antigravity/bin","C:/Program Files/Antigravity/bin"],"versionArgs":["--version"],"versionRegex":"(\\d+\\.\\d+\\.\\d+)","minVersion":"1.100.0","healthIntervalMs":600000,"criticality":"medium"}

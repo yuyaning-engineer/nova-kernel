@@ -1,0 +1,1 @@
+{"id":"codex-cli","type":"exec","displayName":"Codex CLI","envOverride":"CODEX_BIN","execNames":["codex.cmd","codex"],"winSearchPaths":["%APPDATA%/npm"],"versionArgs":["--version"],"versionRegex":"(\\d+\\.\\d+\\.\\d+)","minVersion":"0.120.0","healthIntervalMs":600000,"criticality":"high","npm_package":"@openai/codex"}

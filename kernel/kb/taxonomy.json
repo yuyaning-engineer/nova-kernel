@@ -1,0 +1,48 @@
+{
+  "version": "1.0",
+  "_doc": "硬标签枚举。写记忆时 module 强制选；function 框架自动推断；department 走软标签聚类（见 S6）。修改本文件必须走 nova_propose_change。",
+  "module": {
+    "enum": [
+      "nova-kernel",
+      "nova-sdk",
+      "commerce-ops",
+      "media-forge",
+      "enterprise-ai",
+      "ai-studio",
+      "obsidian-ai",
+      "tiktok-agent",
+      "video-agent",
+      "video-remix",
+      "antigravity",
+      "kb-v2",
+      "meta",
+      "other"
+    ],
+    "default": "meta",
+    "required": true
+  },
+  "function": {
+    "enum": [
+      "generate",
+      "analyze",
+      "execute",
+      "configure",
+      "diagnose",
+      "retrieve",
+      "curate",
+      "other"
+    ],
+    "default": "other",
+    "required": false,
+    "_doc": "SDK 自动推断（从调用栈/文件路径），不强制用户填"
+  },
+  "department": {
+    "_doc": "软标签，emergent。S6 夜间聚类生成，不写入 schema。",
+    "suggested_seed": ["运营", "设计", "客服", "供应链", "品控", "开发", "决策"]
+  },
+  "risk_level": {
+    "enum": ["L1", "L2", "L3"],
+    "default": "L1",
+    "_doc": "L1 自动衰减/引用晋级；L2-L3 走策展 + Veto"
+  }
+}
